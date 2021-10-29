@@ -85,8 +85,7 @@ public class WebSocketMessageSerializerTest {
         );
 
         // then
-        assertTrue(jsonHttpResponse.equals(
-            "{" + NEW_LINE +
+        assertEquals("{" + NEW_LINE +
             "  \"type\" : \"org.mockserver.model.HttpResponse\"," + NEW_LINE +
             "  \"value\" : \"{" + StringEscapeUtils.escapeJava(NEW_LINE) +
             "  \\\"statusCode\\\" : 123," + StringEscapeUtils.escapeJava(NEW_LINE) +
@@ -102,26 +101,7 @@ public class WebSocketMessageSerializerTest {
             "    \\\"value\\\" : 1" + StringEscapeUtils.escapeJava(NEW_LINE) +
             "  }" + StringEscapeUtils.escapeJava(NEW_LINE) +
             "}\"" + NEW_LINE +
-            "}"
-        ) || jsonHttpResponse.equals(
-            "{" + NEW_LINE +
-            "  \"type\" : \"org.mockserver.model.HttpResponse\"," + NEW_LINE +
-            "  \"value\" : \"{" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  \\\"statusCode\\\" : 123," + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  \\\"headers\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "    \\\"someHeaderName\\\" : [ \\\"someHeaderValue\\\" ]" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  }," + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  \\\"cookies\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "    \\\"someCookieName\\\" : \\\"someCookieValue\\\"" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  }," + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  \\\"body\\\" : \\\"somebody\\\"," + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  \\\"delay\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "    \\\"value\\\" : 1," + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "    \\\"timeUnit\\\" : \\\"MINUTES\\\"" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  }" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "}\"" + NEW_LINE +
-            "}"
-        ));
+            "}", jsonHttpResponse);
     }
 
     @Test
@@ -209,30 +189,61 @@ public class WebSocketMessageSerializerTest {
         );
 
         // then
-        assertEquals("{" + NEW_LINE +
-            "  \"type\" : \"org.mockserver.model.HttpRequest\"," + NEW_LINE +
-            "  \"value\" : \"{" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  \\\"method\\\" : \\\"someMethod\\\"," + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  \\\"path\\\" : \\\"somePath\\\"," + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  \\\"queryStringParameters\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "    \\\"queryParameterName\\\" : [ \\\"queryParameterValue\\\" ]" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  }," + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  \\\"headers\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "    \\\"someHeaderName\\\" : [ \\\"someHeaderValue\\\" ]" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  }," + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  \\\"cookies\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "    \\\"someCookieName\\\" : \\\"someCookieValue\\\"" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  }," + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  \\\"keepAlive\\\" : false," + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  \\\"secure\\\" : true," + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  \\\"socketAddress\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "    \\\"host\\\" : \\\"someHost\\\"," + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "    \\\"port\\\" : 1234," + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "    \\\"scheme\\\" : \\\"HTTPS\\\"" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  }," + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "  \\\"body\\\" : \\\"somebody\\\"" + StringEscapeUtils.escapeJava(NEW_LINE) +
-            "}\"" + NEW_LINE +
-            "}", jsonHttpRequest);
+        String socketAddressString1 = "  \\\"socketAddress\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"host\\\" : \\\"someHost\\\"," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"port\\\" : 1234," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"scheme\\\" : \\\"HTTPS\\\"" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  }," + StringEscapeUtils.escapeJava(NEW_LINE);
+        String socketAddressString2 = "  \\\"socketAddress\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"host\\\" : \\\"someHost\\\"," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"scheme\\\" : \\\"HTTPS\\\"," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"port\\\" : 1234" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  }," + StringEscapeUtils.escapeJava(NEW_LINE);
+        String socketAddressString3 = "  \\\"socketAddress\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"port\\\" : 1234," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"host\\\" : \\\"someHost\\\"," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"scheme\\\" : \\\"HTTPS\\\"" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  }," + StringEscapeUtils.escapeJava(NEW_LINE);
+        String socketAddressString4 = "  \\\"socketAddress\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"port\\\" : 1234," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"scheme\\\" : \\\"HTTPS\\\"," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"host\\\" : \\\"someHost\\\"" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  }," + StringEscapeUtils.escapeJava(NEW_LINE);
+        String socketAddressString5 = "  \\\"socketAddress\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"scheme\\\" : \\\"HTTPS\\\"," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"host\\\" : \\\"someHost\\\"," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"port\\\" : 1234" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  }," + StringEscapeUtils.escapeJava(NEW_LINE);
+        String socketAddressString6 = "  \\\"socketAddress\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"scheme\\\" : \\\"HTTPS\\\"," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"port\\\" : 1234," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"host\\\" : \\\"someHost\\\"" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  }," + StringEscapeUtils.escapeJava(NEW_LINE);
+        String valueStringBeforeSocketAddress = "  \"value\" : \"{" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  \\\"method\\\" : \\\"someMethod\\\"," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  \\\"path\\\" : \\\"somePath\\\"," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  \\\"queryStringParameters\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"queryParameterName\\\" : [ \\\"queryParameterValue\\\" ]" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  }," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  \\\"headers\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"someHeaderName\\\" : [ \\\"someHeaderValue\\\" ]" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  }," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  \\\"cookies\\\" : {" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "    \\\"someCookieName\\\" : \\\"someCookieValue\\\"" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  }," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  \\\"keepAlive\\\" : false," + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "  \\\"secure\\\" : true," + StringEscapeUtils.escapeJava(NEW_LINE);
+        String valueStringAfterSocketAddress = "  \\\"body\\\" : \\\"somebody\\\"" + StringEscapeUtils.escapeJava(NEW_LINE) +
+        "}\"";
+
+        assertTrue(jsonHttpRequest.contains("type\" : \"org.mockserver.model.HttpRequest\"") && (
+            jsonHttpRequest.contains(valueStringBeforeSocketAddress + socketAddressString1 + valueStringAfterSocketAddress) ||
+            jsonHttpRequest.contains(valueStringBeforeSocketAddress + socketAddressString2 + valueStringAfterSocketAddress) ||
+            jsonHttpRequest.contains(valueStringBeforeSocketAddress + socketAddressString3 + valueStringAfterSocketAddress) ||
+            jsonHttpRequest.contains(valueStringBeforeSocketAddress + socketAddressString4 + valueStringAfterSocketAddress) ||
+            jsonHttpRequest.contains(valueStringBeforeSocketAddress + socketAddressString5 + valueStringAfterSocketAddress) ||
+            jsonHttpRequest.contains(valueStringBeforeSocketAddress + socketAddressString6 + valueStringAfterSocketAddress)
+        ));
     }
 
 }
